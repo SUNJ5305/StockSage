@@ -2,6 +2,7 @@
 import base64
 import io
 
+import certifi
 from django.shortcuts import render
 import pandas as pd
 
@@ -36,7 +37,7 @@ def index(request):
     # 환율정보 가져오기 (open API)
     # API 인증키 : DPModF9KEpqknLkTe9GxHGp8k1me31CC
     url = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=DPModF9KEpqknLkTe9GxHGp8k1me31CC&searchdate=20240701&data=AP01'
-    req = requests.get(url, verify=False)
+    req = requests.get(url, verify=certifi.where())
     # 받은 정보(req)에서 json 데이터를 가져 옴
     json_data = req.json()
     # json 데이터를 DataFrame에 넣기

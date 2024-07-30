@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from member.models import Member
+from decorator.decorator import loginchk, loginadmin
 
 
 # Create your views here.
@@ -50,16 +51,19 @@ def login(request):
                 context = {"msg" : "비밀번호를 확인하세요.", "url":"/member/login/"}
                 return render(request, "alert.html", context)
 
+@loginchk
 def logout(request) :
     auth.logout(request)
     context = {"msg" : "로그아웃 되었습니다.", "url" : "/member/login"}
     return render(request, "alert.html", context)
 
+@loginchk
 def info(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1)
     return render(request, "member/info.html", {"member": member})
 
+@loginchk
 def update(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1)
@@ -78,6 +82,7 @@ def update(request):
             context = {"msg" : "비밀번호를 확인해주세요.", "url" : "/member/update/"}
             return render(request, "alert.html", context)
 
+@loginchk
 def chgpass(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1)
@@ -97,7 +102,7 @@ def chgpass(request):
             context = {"msg" : "비밀번호를 확인해주세요.", "url" : "/member/chgpass/"}
             return render(request, "alert.html", context)
 
-
+@loginchk
 def delete(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1) #select 문장 실행
@@ -112,3 +117,9 @@ def delete(request):
         else:
             context = {"msg":"비밀번호가 틀립니다.", "url":"/member/delete/"}
             return render(request, "alert.html", context)
+
+@loginadmin
+def admin(request):
+    if request.method != "POST":
+        mlist = Member.objects.all()
+        return render(request, "member/admin.html", {"mlist": mlist})

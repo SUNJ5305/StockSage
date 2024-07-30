@@ -10,4 +10,5 @@ urlpatterns = [
     path("update/", views.update, name="update"),
     path("chgpass/", views.chgpass, name="chgpass"),
     path("delete/", views.delete, name="delete"),
+    path("admin/", views.admin, name="admin"),
 ]
