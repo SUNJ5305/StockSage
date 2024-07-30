@@ -3,58 +3,126 @@
 {% block title %}회원가입{% endblock %}
 
 {% block content %}
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .form-container {
-            max-width: 500px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-        .footer {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #f8f9fa;
-            text-align: center;
-            padding: 10px 0;
-        }
-    </style>
-    <div class="form-container">
-        <h2 class="text-center">회원가입</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id">아이디</label>
-                <input type="text" name="id" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="pass1">비밀번호</label>
-                <input type="password" name="pass1" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="name">이름</label>
-                <input type="text" name="name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="gender">성별</label>
-                <select name="gender" class="form-control">
-                    <option value="0">남성</option>
-                    <option value="1">여성</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="tel">전화번호</label>
-                <input type="tel" name="tel" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="email">이메일</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">가입하기</button>
-        </form>
-    </div>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .form-container {
+        width: 600px; /* 창 너비 확장 */
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+    .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #f8f9fa;
+        text-align: center;
+        padding: 10px 0;
+    }
+    .valid-feedback, .invalid-feedback {
+        display: none;
+        font-size: 0.9em;
+        white-space: nowrap; /* 줄바꿈 방지 */
+    }
+    .is-valid + .valid-feedback {
+        display: block;
+        color: green; /* 유효한 입력 메시지 색상 */
+    }
+    .is-invalid + .invalid-feedback {
+        display: block;
+        color: red; /* 유효하지 않은 입력 메시지 색상 */
+    }
+</style>
+<div class="form-container">
+    <h2 class="text-center">회원가입</h2>
+    <form method="post" id="signup-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id">아이디</label>
+            <input type="text" name="id" id="id" class="form-control" required>
+            <div class="valid-feedback">사용 가능한 아이디입니다.</div>
+            <div class="invalid-feedback">아이디는 4~12자의 영문과 숫자만 사용해야 합니다.</div>
+        </div>
+        <div class="form-group">
+            <label for="pass1">비밀번호</label>
+            <input type="password" name="pass1" id="pass1" class="form-control" required>
+            <div class="valid-feedback">사용 가능한 비밀번호입니다.</div>
+            <div class="invalid-feedback">비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.</div>
+        </div>
+        <div class="form-group">
+            <label for="name">이름</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="gender">성별</label>
+            <select name="gender" class="form-control">
+                <option value="0">남성</option>
+                <option value="1">여성</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="tel">전화번호</label>
+            <input type="tel" name="tel" id="tel" class="form-control" required>
+            <div class="valid-feedback">유효한 전화번호입니다.</div>
+            <div class="invalid-feedback">전화번호는 '-' 없이 숫자 11자리여야 합니다.</div>
+        </div>
+        <div class="form-group">
+            <label for="email">이메일</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+            <div class="valid-feedback">유효한 이메일입니다.</div>
+            <div class="invalid-feedback">올바른 이메일 형식을 입력하세요.</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">가입하기</button>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('signup-form');
+
+        form.addEventListener('input', function (event) {
+            const target = event.target;
+
+            if (target.name === 'id') {
+                const idPattern = /^[a-zA-Z0-9]{4,12}$/;
+                if (idPattern.test(target.value)) {
+                    target.classList.remove('is-invalid');
+                    target.classList.add('is-valid');
+                } else {
+                    target.classList.remove('is-valid');
+                    target.classList.add('is-invalid');
+                }
+            } else if (target.name === 'pass1') {
+                const passPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (passPattern.test(target.value)) {
+                    target.classList.remove('is-invalid');
+                    target.classList.add('is-valid');
+                } else {
+                    target.classList.remove('is-valid');
+                    target.classList.add('is-invalid');
+                }
+            } else if (target.name === 'tel') {
+                const telPattern = /^\d{11}$/;
+                if (telPattern.test(target.value)) {
+                    target.classList.remove('is-invalid');
+                    target.classList.add('is-valid');
+                } else {
+                    target.classList.remove('is-valid');
+                    target.classList.add('is-invalid');
+                }
+            } else if (target.name === 'email') {
+                const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (emailPattern.test(target.value)) {
+                    target.classList.remove('is-invalid');
+                    target.classList.add('is-valid');
+                } else {
+                    target.classList.remove('is-valid');
+                    target.classList.add('is-invalid');
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -7,10 +7,6 @@ from django.shortcuts import render
 from member.models import Member
 from decorator.decorator import loginchk, loginadmin
 
-
-# Create your views here.
-
-
 def signup(request) :
     if request.method != "POST":
         return render(request, "member/signup.html")
