@@ -43,7 +43,6 @@ def login(request):
         else :
             if pass1 == member.pass1:
                 request.session['id'] = id1
-                time.sleep(1)
                 context = {"msg" : "환영합니다.", "url" : "/stock/index/"}
                 return render(request, "alert.html", context)
 
@@ -65,16 +64,51 @@ def update(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1)
     if request.method != "POST":
-        member.delete()
+        return render(request, "member/update.html", {"member": member})
+    else:
+        if member.pass1 == request.POST['password']:
+            member.name = request.POST["name"]
+            member.gender = request.POST["gender"]
+            member.tel = request.POST["tel"]
+            member.email = request.POST["email"]
+            member.save()
+            context = {"msg" : "정보가 수정되었습니다.", "url" : "/member/info/"}
+            return render(request, "alert.html", context)
+        else:
+            context = {"msg" : "비밀번호를 확인해주세요.", "url" : "/member/update/"}
+            return render(request, "alert.html", context)
 
 def chgpass(request):
     id1 = request.session["id"]
     member = Member.objects.get(id=id1)
     if request.method != "POST":
-        member.delete()
+        return render(request, "member/chgpass.html")
+    else:
+        if member.pass1 == request.POST['current_password']:
+            if request.POST['new_password'] == request.POST['confirm_password']:
+                member.pass1 = request.POST["new_password"]
+                member.save()
+                context = {"msg" : "비밀번호가 변경되었습니다.", "url" : "/member/login/"}
+                return render(request, "alert.html", context)
+            else:
+                context = {"msg" : "새 비밀번호가 서로 일치하지 않습니다.", "url" : "/member/chgpass/"}
+                return render(request, "alert.html", context)
+        else:
+            context = {"msg" : "비밀번호를 확인해주세요.", "url" : "/member/chgpass/"}
+            return render(request, "alert.html", context)
+
 
 def delete(request):
     id1 = request.session["id"]
-    member = Member.objects.get(id=id1)
-    if request.method != "POST":
-        member.delete()
+    member = Member.objects.get(id=id1) #select 문장 실행
+    if request.method != 'POST':
+        return render(request, 'member/delete.html', {"member" : member})
+    else:
+        if request.POST["password"] == member.pass1:
+            member.delete()
+            auth.logout(request)
+            context = {"msg":"회원이 탈퇴되었습니다.", "url":"/member/login/"}
+            return render(request, "alert.html", context)
+        else:
+            context = {"msg":"비밀번호가 틀립니다.", "url":"/member/delete/"}
+            return render(request, "alert.html", context)

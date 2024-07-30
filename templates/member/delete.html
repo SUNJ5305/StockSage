@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}계정 삭제{% endblock %}
+
+{% block content %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .delete-account-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+    </style>
+    <div class="delete-account-container">
+        <h2 class="text-center text-danger">계정 삭제</h2>
+        <p class="text-center">계정을 삭제하려면 비밀번호를 입력하세요. 이 작업은 되돌릴 수 없습니다.</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="password">비밀번호 확인</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-danger btn-block">계정 삭제</button>
+        </form>
+    </div>
+{% endblock %}
