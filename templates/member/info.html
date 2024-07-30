@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}유저 정보{% endblock %}
+
+{% block content %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .info-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+    </style>
+    <div class="info-container">
+        <h2 class="text-center">유저 정보</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>아이디:</strong> {{ member.id }}</li>
+            <li class="list-group-item"><strong>이름:</strong> {{ member.name }}</li>
+            <li class="list-group-item"><strong>성별:</strong>
+                {% if member.gender == 0 %}
+                    남성
+                {% elif member.gender == 1 %}
+                    여성
+                {% endif %}
+            </li>
+            <li class="list-group-item"><strong>전화번호:</strong> {{ member.tel }}</li>
+            <li class="list-group-item"><strong>이메일:</strong> {{ member.email }}</li>
+        </ul>
+        <div class="text-center mt-4">
+            <a href="" class="btn btn-warning">정보 수정</a>
+            <a href="" class="btn btn-warning">비밀번호 변경</a>
+            <a href="" class="btn btn-danger">회원 탈퇴</a>
+        </div>
+    </div>
+{% endblock %}

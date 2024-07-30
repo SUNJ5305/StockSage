@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #247fe0;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.search-bar {
+    background-color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #000;
+    flex: 1;
+    margin: 0 20px;
+}
+
+.nav ul {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+}
+
+.nav ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.main-content {
+    display: flex;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stock-ranking, .exchange-rate {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.ranking-number {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #ddd;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.kospi-chart {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.chart-image {
+    width: 100%;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.tab.active {
+    background-color: #000;
+    color: #fff;
+}
+
+.tab-content {
+    display: none;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.stock-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.stock-section {
+    flex: 1;
+    min-width: 300px;
+}
+
+.stock-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.stock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.stock span {
+    flex: 1;
+    text-align: center;
+}
+
+.ranking-number {
+    background-color: #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    line-height: 20px;
+}
+
+.footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: #fff;
+    /* 푸터 설정을 위한 주석 */
+    position: relative;  /* 고정된 푸터를 원하지 않는다면 'relative' */
+    bottom: 0;
+    width: 100%;
+}

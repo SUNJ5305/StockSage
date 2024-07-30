@@ -1,0 +1,31 @@
+<header class="header">
+    <div class="logo"><a href="/">LOGO</a></div>
+    <div class="search-bar">종목명, 종목코드</div>
+    <nav class="nav">
+        <ul>
+            {% if request.session.id %}
+                <li class="nav-item"><a class="nav-link"
+                                        href="/member/info">
+                    회원정보[{{request.session.id}}]
+                </a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/member/logout">로그아웃</a>
+                </li>
+
+            {% else %}
+                <li class="nav-item"><a class="nav-link"
+                                        href="/member/signup">회원가입</a>
+                </li>
+                <li class="nav-item"><a class="nav-link"
+                                        href="/member/login">로그인</a>
+                </li>
+            {% endif %}
+
+            {% if request.session.id == 'admin' %}
+                <li class="nav-item"><a class="nav-link"
+                                        href="/member/list">회원리스트</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
