@@ -44,7 +44,7 @@ def login(request):
         else :
             if pass1 == member.pass1:
                 request.session['id'] = id1
-                context = {"msg" : "환영합니다.", "url" : "/stock/index/"}
+                context = {"msg" : id1 + "님 환영합니다.", "url" : "/stock/index/"}
                 return render(request, "alert.html", context)
 
             else :
