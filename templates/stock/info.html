@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Stock Sage - {{ ticker }} 정보{% endblock %}
+
+{% block content %}
+    <h1>{{ company_name }} ({{ ticker }}) 주가 정보</h1>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% elif graphic %}
+        <p>현재 가격: {{ current_price }}</p>
+        <p>전일 종가: {{ previous_close }}</p>
+        <img src="data:image/png;base64,{{ graphic }}" alt="{{ ticker }} Graph">
+    {% else %}
+        <p>주식 코드를 입력해주세요.</p>
+    {% endif %}
+
+    <form method="get" action="/stock/info/">
+        <input type="text" id="stock-search" name="ticker" placeholder="주식 코드 입력 (예: 068270)" autocomplete="off">
+        <button type="submit">검색</button>
+        <div id="search-results" style="position: absolute; background: white; border: 1px solid #ccc; z-index: 1000; width: 200px;"></div>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var searchTimeout;
+            $('#stock-search').on('input', function() {
+                clearTimeout(searchTimeout);
+                var query = $(this).val();
+                searchTimeout = setTimeout(function() {
+                    if (query.length > 0) {
+                        $.ajax({
+                            url: '/stock/search_stocks/',
+                            data: {
+                                'query': query
+                            },
+                            success: function(data) {
+                                var results = $('#search-results');
+                                results.empty();
+                                if (data.stocks && data.stocks.length > 0) {
+                                    var list = $('<ul style="list-style-type: none; padding: 0;">');
+                                    data.stocks.slice(0, 5).forEach(function(stock) {
+                                        list.append($('<li style="padding: 5px; cursor: pointer;">').text(stock.code + ' - ' + stock.name)
+                                            .click(function() {
+                                                $('#stock-search').val(stock.code);
+                                                results.empty();
+                                            }));
+                                    });
+                                    results.append(list);
+                                } else {
+                                    results.text('일치하는 주식이 없습니다.');
+                                }
+                            },
+                            error: function() {
+                                $('#search-results').text('검색 중 오류가 발생했습니다.');
+                            }
+                        });
+                    } else {
+                        $('#search-results').empty();
+                    }
+                }, 300);
+            });
+        });
+    </script>
+{% endblock %}
