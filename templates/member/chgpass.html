@@ -6,7 +6,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .password-change-container {
-            max-width: 600px;
+            width: 420px; /* 창 너비 확장 */
             margin: 50px auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -14,10 +14,23 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             background-color: #fff;
         }
+        .valid-feedback, .invalid-feedback {
+            display: none;
+            font-size: 0.9em;
+            white-space: nowrap; /* 메시지가 줄바꿈 없이 한 줄로 표시되게 설정 */
+        }
+        .is-valid + .valid-feedback {
+            display: block;
+            color: green;
+        }
+        .is-invalid + .invalid-feedback {
+            display: block;
+            color: red;
+        }
     </style>
     <div class="password-change-container">
         <h2 class="text-center">비밀번호 변경</h2>
-        <form method="post">
+        <form method="post" id="chgpass-form">
             {% csrf_token %}
             <div class="form-group">
                 <label for="current_password">현재 비밀번호</label>
@@ -26,12 +39,43 @@
             <div class="form-group">
                 <label for="new_password">새 비밀번호</label>
                 <input type="password" class="form-control" id="new_password" name="new_password" required>
+                <div class="valid-feedback">유효한 비밀번호입니다.</div>
+                <div class="invalid-feedback">비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.</div>
             </div>
             <div class="form-group">
                 <label for="confirm_password">새 비밀번호 확인</label>
                 <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+                <div class="valid-feedback">비밀번호가 일치합니다.</div>
+                <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
             </div>
             <button type="submit" class="btn btn-primary btn-block">비밀번호 변경</button>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('chgpass-form');
+            const newPassword = document.getElementById('new_password');
+            const confirmPassword = document.getElementById('confirm_password');
+
+            form.addEventListener('input', function () {
+                // New Password Validation
+                if (newPassword.value.length >= 8 && /[A-Za-z]/.test(newPassword.value) && /\d/.test(newPassword.value)) {
+                    newPassword.classList.remove('is-invalid');
+                    newPassword.classList.add('is-valid');
+                } else {
+                    newPassword.classList.remove('is-valid');
+                    newPassword.classList.add('is-invalid');
+                }
+
+                // Confirm Password Validation
+                if (confirmPassword.value === newPassword.value) {
+                    confirmPassword.classList.remove('is-invalid');
+                    confirmPassword.classList.add('is-valid');
+                } else {
+                    confirmPassword.classList.remove('is-valid');
+                    confirmPassword.classList.add('is-invalid');
+                }
+            });
+        });
+    </script>
 {% endblock %}
