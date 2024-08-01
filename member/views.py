@@ -1,5 +1,6 @@
 from django.contrib import auth
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 
 from decorator.decorator import loginchk, loginadmin
 from member.models import Member, PageAccessLog
@@ -177,13 +178,29 @@ def delete(request):
 
 @loginadmin
 def admin(request):
-    if request.method != "POST":
-        # 모든 회원 정보와 페이지 접근 로그를 가져옴
-        mlist = Member.objects.all()
-        logs = PageAccessLog.objects.all().order_by('-access_time')  # 최신순으로 정렬
+    # GET 파라미터에서 탭 상태를 가져옴
+    current_tab = request.GET.get('tab', 'user-list')  # 기본값은 'user-list'
 
-        context = {
-            "mlist": mlist,
-            "logs": logs
-        }
-        return render(request, "member/admin.html", context)
+    # 회원 목록 가져오기
+    mlist = Member.objects.all()
+
+    # 로그 기록 가져오기 및 필터링
+    logs = PageAccessLog.objects.exclude(page_url__icontains='/admin/').order_by('-access_time')
+
+    # 날짜 범위 필터링
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    if start_date and end_date:
+        logs = logs.filter(access_time__range=[start_date, end_date])
+
+    # 페이지네이션 처리
+    paginator = Paginator(logs, 10)  # 페이지당 10개의 로그 항목
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "mlist": mlist,
+        "page_obj": page_obj,
+        "current_tab": current_tab
+    }
+    return render(request, "member/admin.html", context)
