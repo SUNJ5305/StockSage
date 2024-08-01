@@ -2,8 +2,7 @@ from django.contrib import auth
 from django.shortcuts import render, redirect
 
 from decorator.decorator import loginchk, loginadmin
-from member.models import Member
-
+from member.models import Member, PageAccessLog
 
 def signup(request):
     if request.method != "POST":
@@ -179,5 +178,12 @@ def delete(request):
 @loginadmin
 def admin(request):
     if request.method != "POST":
+        # 모든 회원 정보와 페이지 접근 로그를 가져옴
         mlist = Member.objects.all()
-        return render(request, "member/admin.html", {"mlist": mlist})
+        logs = PageAccessLog.objects.all().order_by('-access_time')  # 최신순으로 정렬
+
+        context = {
+            "mlist": mlist,
+            "logs": logs
+        }
+        return render(request, "member/admin.html", context)

@@ -86,7 +86,28 @@
             </div>
             <div id="post-list" class="admin-section" style="display: none;">
                 <h2>로그 기록</h2>
-                <!-- 게시글 목록 내용이 여기에 표시됩니다. -->
+                <div class="table-container">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>로그 시간</th>
+                            <th>ip 주소</th>
+                            <th>접속 페이지</th>
+                            <th>아이디</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for l in logs %}
+                            <tr>
+                                <td>{{ l.access_time }}</td>
+                                <td>{{ l.ip_address }}</td>
+                                <td>{{ l.page_url }}</td>
+                                <td>{{ l.user_id }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div id="other-functions" class="admin-section" style="display: none;">
                 <h2>기타 기능</h2>
