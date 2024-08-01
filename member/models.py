@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 # Create your models here.
 
 class Member(models.Model) :
@@ -9,3 +8,4 @@ class Member(models.Model) :
     gender = models.IntegerField(default=0)
     tel = models.CharField(max_length=20)
     email = models.CharField(max_length=100)
+
