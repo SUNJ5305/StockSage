@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}비밀번호 재설정{% endblock %}
+
+{% block content %}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            width: 420px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px 0;
+        }
+        .valid-feedback, .invalid-feedback {
+            display: none;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+        .is-valid + .valid-feedback {
+            display: block;
+            color: green;
+        }
+        .is-invalid + .invalid-feedback {
+            display: block;
+            color: red;
+        }
+    </style>
+    <div class="form-container">
+        {% if step == "reset" %}
+            <!-- 비밀번호 재설정 폼 -->
+            <h2 class="text-center">비밀번호 재설정</h2>
+            <form method="post" id="reset-form">
+                <input type="hidden" name="id" value="{{ id }}">
+                <input type="hidden" name="email" value="{{ email }}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="new-pass1">새 비밀번호</label>
+                    <input type="password" name="new-pass1" id="new-pass1" class="form-control" required>
+                    <div class="valid-feedback">사용 가능한 비밀번호입니다.</div>
+                    <div class="invalid-feedback">비밀번호는 영문과 숫자를 포함하여 8자 이상이어야 합니다.</div>
+                </div>
+                <div class="form-group">
+                    <label for="new-pass2">새 비밀번호 확인</label>
+                    <input type="password" name="new-pass2" id="new-pass2" class="form-control" required>
+                    <div class="valid-feedback">비밀번호가 일치합니다.</div>
+                    <div class="invalid-feedback">비밀번호가 일치하지 않습니다.</div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">비밀번호 재설정</button>
+            </form>
+        {% else %}
+            <!-- ID와 이메일 입력 폼 -->
+            <h2 class="text-center">비밀번호 재설정 요청</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id">아이디</label>
+                    <input type="text" name="id" id="id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">이메일</label>
+                    <input type="email" name="email" id="email" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">다음 단계로</button>
+            </form>
+        {% endif %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('reset-form');
+            const newPass1 = document.getElementById('new-pass1');
+            const newPass2 = document.getElementById('new-pass2');
+
+            function validatePassword() {
+                const passPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (passPattern.test(newPass1.value)) {
+                    newPass1.classList.remove('is-invalid');
+                    newPass1.classList.add('is-valid');
+                } else {
+                    newPass1.classList.remove('is-valid');
+                    newPass1.classList.add('is-invalid');
+                }
+
+                if (newPass1.value === newPass2.value) {
+                    newPass2.classList.remove('is-invalid');
+                    newPass2.classList.add('is-valid');
+                } else {
+                    newPass2.classList.remove('is-valid');
+                    newPass2.classList.add('is-invalid');
+                }
+            }
+
+            form.addEventListener('input', function (event) {
+                validatePassword();
+            });
+
+            form.addEventListener('submit', function (event) {
+                if (newPass1.classList.contains('is-invalid') || newPass2.classList.contains('is-invalid')) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endblock %}
