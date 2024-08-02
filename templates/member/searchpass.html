@@ -78,37 +78,39 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('reset-form');
-            const newPass1 = document.getElementById('new-pass1');
-            const newPass2 = document.getElementById('new-pass2');
+            if (form) { // Only add event listeners if the reset form is present
+                const newPass1 = document.getElementById('new-pass1');
+                const newPass2 = document.getElementById('new-pass2');
 
-            function validatePassword() {
-                const passPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-                if (passPattern.test(newPass1.value)) {
-                    newPass1.classList.remove('is-invalid');
-                    newPass1.classList.add('is-valid');
-                } else {
-                    newPass1.classList.remove('is-valid');
-                    newPass1.classList.add('is-invalid');
+                function validatePassword() {
+                    const passPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                    if (passPattern.test(newPass1.value)) {
+                        newPass1.classList.remove('is-invalid');
+                        newPass1.classList.add('is-valid');
+                    } else {
+                        newPass1.classList.remove('is-valid');
+                        newPass1.classList.add('is-invalid');
+                    }
+
+                    if (newPass1.value === newPass2.value) {
+                        newPass2.classList.remove('is-invalid');
+                        newPass2.classList.add('is-valid');
+                    } else {
+                        newPass2.classList.remove('is-valid');
+                        newPass2.classList.add('is-invalid');
+                    }
                 }
 
-                if (newPass1.value === newPass2.value) {
-                    newPass2.classList.remove('is-invalid');
-                    newPass2.classList.add('is-valid');
-                } else {
-                    newPass2.classList.remove('is-valid');
-                    newPass2.classList.add('is-invalid');
-                }
+                form.addEventListener('input', function () {
+                    validatePassword();
+                });
+
+                form.addEventListener('submit', function (event) {
+                    if (newPass1.classList.contains('is-invalid') || newPass2.classList.contains('is-invalid')) {
+                        event.preventDefault();
+                    }
+                });
             }
-
-            form.addEventListener('input', function (event) {
-                validatePassword();
-            });
-
-            form.addEventListener('submit', function (event) {
-                if (newPass1.classList.contains('is-invalid') || newPass2.classList.contains('is-invalid')) {
-                    event.preventDefault();
-                }
-            });
         });
     </script>
 {% endblock %}

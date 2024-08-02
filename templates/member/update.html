@@ -73,9 +73,20 @@
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('update-form');
 
+            const validateField = (field, pattern, validMessage, invalidMessage) => {
+                if (pattern.test(field.value)) {
+                    field.classList.remove('is-invalid');
+                    field.classList.add('is-valid');
+                    field.nextElementSibling.textContent = validMessage;
+                } else {
+                    field.classList.remove('is-valid');
+                    field.classList.add('is-invalid');
+                    field.nextElementSibling.textContent = invalidMessage;
+                }
+            };
+
             form.addEventListener('input', function (event) {
                 const target = event.target;
-
                 if (target.name === 'name') {
                     if (target.value.trim() !== '') {
                         target.classList.remove('is-invalid');
@@ -110,6 +121,27 @@
                         target.classList.remove('is-valid');
                         target.classList.add('is-invalid');
                     }
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                const nameField = form.querySelector('input[name="name"]');
+                const telField = form.querySelector('input[name="tel"]');
+                const emailField = form.querySelector('input[name="email"]');
+                const passwordField = form.querySelector('input[name="password"]');
+
+                const fields = [nameField, telField, emailField, passwordField];
+
+                let allValid = true;
+                fields.forEach(field => {
+                    if (!field.classList.contains('is-valid')) {
+                        field.classList.add('is-invalid');
+                        allValid = false;
+                    }
+                });
+
+                if (!allValid) {
+                    event.preventDefault();
                 }
             });
         });

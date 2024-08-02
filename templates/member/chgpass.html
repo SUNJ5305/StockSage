@@ -6,7 +6,7 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .password-change-container {
-            width: 420px; /* 창 너비 확장 */
+            width: 420px;
             margin: 50px auto;
             padding: 20px;
             border: 1px solid #ddd;
@@ -17,7 +17,7 @@
         .valid-feedback, .invalid-feedback {
             display: none;
             font-size: 0.9em;
-            white-space: nowrap; /* 메시지가 줄바꿈 없이 한 줄로 표시되게 설정 */
+            white-space: nowrap;
         }
         .is-valid + .valid-feedback {
             display: block;
@@ -74,6 +74,12 @@
                 } else {
                     confirmPassword.classList.remove('is-valid');
                     confirmPassword.classList.add('is-invalid');
+                }
+            });
+
+            form.addEventListener('submit', function (event) {
+                if (newPassword.classList.contains('is-invalid') || confirmPassword.classList.contains('is-invalid')) {
+                    event.preventDefault();
                 }
             });
         });
