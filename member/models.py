@@ -8,6 +8,7 @@ class Member(models.Model) :
     gender = models.IntegerField(default=0)
     tel = models.CharField(max_length=20)
     email = models.CharField(max_length=100)
+    is_active = models.BooleanField(default=True)
 
 
 class PageAccessLog(models.Model):

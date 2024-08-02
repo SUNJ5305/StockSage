@@ -14,7 +14,7 @@ def loginchk(func):
 
 # 관리자만 접근할 수 있도록 한다.
 def loginadmin(func):
-    def check(request):
+    def check(request, *args, **kwargs):
         try:
             login = request.session["id"]
         except: # 로그아웃 상태
@@ -24,5 +24,5 @@ def loginadmin(func):
             if login != 'admin' :
                 context = {"msg":"관리자전용 페이지입니다.","url":"/"}
                 return render(request, "alert.html", context)
-        return func(request)
+        return func(request, *args, **kwargs)
     return check

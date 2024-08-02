@@ -5,6 +5,9 @@ from django.core.paginator import Paginator
 from decorator.decorator import loginchk, loginadmin
 from member.models import Member, PageAccessLog
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+
 def signup(request):
     if request.method != "POST":
         return render(request, "member/signup.html")
@@ -33,15 +36,18 @@ def login(request):
         pass1 = request.POST["pass1"]
         try:
             member = Member.objects.get(id=id1)
-        except:
+        except Member.DoesNotExist:
             context = {"msg": "아이디를 확인하세요", "url": "/member/login/"}
             return render(request, "alert.html", context)
         else:
-            if pass1 == member.pass1:
-                request.session['id'] = id1
-                context = {"msg": id1 + "님 환영합니다.", "url": "/stock/index/"}
-                return render(request, "alert.html", context)
-
+            if member.pass1 == pass1:
+                if member.is_active:  # 비활성화 상태 확인
+                    request.session['id'] = id1
+                    context = {"msg": id1 + "님 환영합니다.", "url": "/stock/index/"}
+                    return render(request, "alert.html", context)
+                else:
+                    context = {"msg": "계정이 비활성화되었습니다.", "url": "/member/login/"}
+                    return render(request, "alert.html", context)
             else:
                 context = {"msg": "비밀번호를 확인하세요.", "url": "/member/login/"}
                 return render(request, "alert.html", context)
@@ -204,3 +210,14 @@ def admin(request):
         "current_tab": current_tab
     }
     return render(request, "member/admin.html", context)
+
+@require_GET
+@loginadmin
+def toggle_member_status(request, member_id):
+    try:
+        member = Member.objects.get(id=member_id)
+        member.is_active = not member.is_active
+        member.save()
+        return JsonResponse({'status': 'success'})
+    except Member.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': '회원이 존재하지 않습니다.'})
