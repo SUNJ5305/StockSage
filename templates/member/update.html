@@ -30,7 +30,7 @@
     </style>
     <div class="edit-container">
         <h2 class="text-center">회원 정보 수정</h2>
-        <form method="post" id="update-form">
+        <form method="post" id="update-form" novalidate>
             {% csrf_token %}
             <div class="form-group">
                 <label for="id">아이디</label>
@@ -73,64 +73,54 @@
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('update-form');
 
-            const validateField = (field, pattern, validMessage, invalidMessage) => {
+            function validateField(field, pattern) {
+                const invalidFeedback = field.nextElementSibling.nextElementSibling;
+                const validFeedback = field.nextElementSibling;
                 if (pattern.test(field.value)) {
                     field.classList.remove('is-invalid');
                     field.classList.add('is-valid');
-                    field.nextElementSibling.textContent = validMessage;
+                    invalidFeedback.style.display = 'none';
+                    validFeedback.style.display = 'block';
                 } else {
                     field.classList.remove('is-valid');
                     field.classList.add('is-invalid');
-                    field.nextElementSibling.textContent = invalidMessage;
+                    validFeedback.style.display = 'none';
+                    invalidFeedback.style.display = 'block';
                 }
-            };
+            }
+
+            function initialValidation() {
+                const nameField = document.getElementById('name');
+                const telField = document.getElementById('tel');
+                const emailField = document.getElementById('email');
+                const passwordField = document.getElementById('password');
+
+                validateField(nameField, /.+/);
+                validateField(telField, /^\d{11}$/);
+                validateField(emailField, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
+                validateField(passwordField, /.+/);
+            }
 
             form.addEventListener('input', function (event) {
                 const target = event.target;
                 if (target.name === 'name') {
-                    if (target.value.trim() !== '') {
-                        target.classList.remove('is-invalid');
-                        target.classList.add('is-valid');
-                    } else {
-                        target.classList.remove('is-valid');
-                        target.classList.add('is-invalid');
-                    }
+                    validateField(target, /.+/);
                 } else if (target.name === 'tel') {
-                    const telPattern = /^\d{11}$/;
-                    if (telPattern.test(target.value)) {
-                        target.classList.remove('is-invalid');
-                        target.classList.add('is-valid');
-                    } else {
-                        target.classList.remove('is-valid');
-                        target.classList.add('is-invalid');
-                    }
+                    validateField(target, /^\d{11}$/);
                 } else if (target.name === 'email') {
-                    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-                    if (emailPattern.test(target.value)) {
-                        target.classList.remove('is-invalid');
-                        target.classList.add('is-valid');
-                    } else {
-                        target.classList.remove('is-valid');
-                        target.classList.add('is-invalid');
-                    }
+                    validateField(target, /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/);
                 } else if (target.name === 'password') {
-                    if (target.value.trim() !== '') {
-                        target.classList.remove('is-invalid');
-                        target.classList.add('is-valid');
-                    } else {
-                        target.classList.remove('is-valid');
-                        target.classList.add('is-invalid');
-                    }
+                    validateField(target, /.+/);
                 }
             });
 
             form.addEventListener('submit', function (event) {
-                const nameField = form.querySelector('input[name="name"]');
-                const telField = form.querySelector('input[name="tel"]');
-                const emailField = form.querySelector('input[name="email"]');
-                const passwordField = form.querySelector('input[name="password"]');
-
-                const fields = [nameField, telField, emailField, passwordField];
+                const fields = [
+                    form.querySelector('input[name="name"]'),
+                    form.querySelector('input[name="tel"]'),
+                    form.querySelector('input[name="email"]'),
+                    form.querySelector('input[name="password"]')
+                ];
 
                 let allValid = true;
                 fields.forEach(field => {
@@ -144,6 +134,8 @@
                     event.preventDefault();
                 }
             });
+
+            initialValidation();
         });
     </script>
 {% endblock %}
